@@ -1,0 +1,35 @@
+
+import os
+import shutil
+
+# Change this to a real, writable folder
+source_folder = r"F:\CodeAlpha_Internship\FilesToOrganize"
+
+file_types = {
+    "Images": [".jpg", ".jpeg", ".png", ".gif", ".bmp"],
+    "Documents": [".pdf", ".docx", ".txt", ".xlsx", ".pptx"],
+    "Videos": [".mp4", ".mkv", ".avi"],
+    "Music": [".mp3", ".wav"],
+    "Archives": [".zip", ".rar", ".7z"],
+    "Others": []
+}
+
+for folder in file_types:
+    folder_path = os.path.join(source_folder, folder)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+for file in os.listdir(source_folder):
+    file_path = os.path.join(source_folder, file)
+    
+    if os.path.isfile(file_path):
+        moved = False
+        for category, extensions in file_types.items():
+            if any(file.lower().endswith(ext) for ext in extensions):
+                shutil.move(file_path, os.path.join(source_folder, category, file))
+                moved = True
+                break
+        if not moved:
+            shutil.move(file_path, os.path.join(source_folder, "Others", file))
+
+print(" File organization complete.")
